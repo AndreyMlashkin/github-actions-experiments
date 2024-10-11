@@ -2,7 +2,7 @@ name: example-cron
 on:
   schedule:
     # runs tests every day at 4am
-    - cron: "*/5 * * * *"
+    - cron: '25 16 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        run: |
-          echo "job was ran!"
+        uses: actions/checkout@v4
 
+      - name: Cypress nightly tests 🌃
+        uses: ./
+        with:
+          working-directory: examples/basic
