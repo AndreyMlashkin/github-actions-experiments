@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-      run: |
-        echo "job was ran!"
+        run: |
+          echo "job was ran!"
 
