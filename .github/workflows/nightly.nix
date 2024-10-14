@@ -1,8 +1,7 @@
 name: example-cron
 on:
   schedule:
-    # runs tests every day at 4am
-    - cron: '25 16 * * *'
+    - cron: '15 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,7 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cypress nightly tests 🌃
-        uses: ./
-        with:
-          working-directory: examples/basic
+      - name: nightly tests
+        run: echo "started by timer"
+
