@@ -1,16 +1,16 @@
-name: example-cron
-on:
+name: Experiment
+on: 
   schedule:
-    - cron: '15 * * * *'
-  workflow_dispatch:
+  - cron: '*/5 * * * *'
 
 jobs:
-  nightly:
-    runs-on: ubuntu-24.04
+  job1:
+    name: Debug
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: nightly tests
-        run: echo "started by timer"
-
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with: { ref: debug }
+    - name: List files
+      run: ls
