@@ -1,25 +1,43 @@
 name: Demo CI
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
   workflow_dispatch:
+    inputs:
+      target_environment:
+        description: "Where to deploy"
+        required: true
+        type: choice
+        options:
+          - test
+          - prod
 
 jobs:
   tests:
     name: Tests
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Run tests
         run: echo "running tests"
-      - name: Run tests 2
-        run: echo "running test 2"
+
+  validate_manual_branch:
+    name: Validate manual deploy branch
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure deploy is started from master
+        run: |
+          if [[ "${{ github.ref_name }}" != "master" ]]; then
+            echo "Manual deployments are allowed only from master."
+            exit 1
+          fi
 
   deploy_test:
     name: Deploy Test
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target_environment == 'test'
     runs-on: ubuntu-latest
-    needs: tests
+    needs: validate_manual_branch
     environment:
       name: test
     env:
@@ -35,8 +53,9 @@ jobs:
 
   deploy_prod:
     name: Deploy Prod
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target_environment == 'prod'
     runs-on: ubuntu-latest
-    needs: deploy_test
+    needs: validate_manual_branch
     environment:
       name: prod
     env:
